@@ -1,0 +1,220 @@
+/*公共样式*/
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+.fl {
+	float: left;
+}
+
+.fr {
+	float: right;
+}
+
+
+/*audioPlayer*/
+
+.leftArea {
+	float: left;
+	width: 60%;
+}
+
+.rightArea {
+	float: right;
+}
+
+.container {
+	width: 850px;
+	height: 440px;
+	margin: 50px auto;
+	background: #FAFAFA;
+}
+
+.inner {
+	margin: 50px 30px;
+}
+
+.title {
+	font-size: 16px;
+	font-weight: 400;
+	height: 22px;
+	line-height: 22px;
+	color: rgb(47, 152, 66);
+	padding-top: 30px;
+
+}
+
+.sub_wraper .music_info {
+	margin-top:70px;
+}
+.sub_wraper .music_info .music_name {
+	font-size: 25px;
+	font-weight: 400;
+	color: rgb(3, 3, 3);
+}
+
+.sub_wraper .music_info .music_singer {
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 1.2;
+	color: rgb(74, 74, 74);
+}
+.control_pannel{
+	margin-top: 15px;
+}
+.control_pannel div{
+	float: left;
+	margin-right: 10px;
+}
+.control_pannel i,span{
+	font-size:15px;
+	color: #696969;
+    font-weight: 400;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    line-height: 25px;
+   
+}
+.control_pannel i{
+	 cursor: pointer;
+}
+.control_pannel i:hover{
+	transition: all 0.5s linear;
+	background: rgba(222,222,222,0.5);
+	transition: all 0.5s linear;
+}
+#Lyric,#download{
+	font-size:24px;
+}
+#download{
+	margin-left:135px;
+	
+}
+.control_pannel span{
+	font-size:12px;
+	margin-right: 10px;
+}
+.progress_pannel{
+	width: 400px;
+	height: 2px;
+	background:#CCCCCC;
+	margin-top: 10px;
+   	cursor: pointer;
+}
+.pannel_inner{
+	width: 0px;
+	height: 200%;
+	background:rgb(47, 152, 66); 
+}
+
+.voice_control{
+	position: relative;
+}
+.voice_active{
+	width: 1px;
+	height: 60px;
+	background: #CCCCCC;
+	margin-left: 15px;
+	margin-top: 10px;
+	cursor: pointer;
+}
+.voice_wrap{
+	height: 80px;
+	width: 30px;
+	position: absolute;
+	top: -76px;
+	left: -2px;
+	background:#FFFFFF;
+	display: none;
+	transform: rotate(180deg);
+
+}
+.voice_inner{
+	height: 0;
+	width: 100%;
+	background:rgb(47, 152, 66); 
+	
+}
+.voice_control:hover .voice_wrap{
+	display: block;
+}
+.main_contrl div{
+	float: left;
+}
+.main_contrl{
+	width:430px;
+	margin-top: 60px;
+}
+.main_contrl i{
+	display: inline-block;
+	font-size: 30px;
+	opacity: 0.6;
+	width: 40px;
+	margin-right: 10px;
+	cursor: pointer;
+}
+.main_contrl i:hover{
+	opacity: 1;
+	transition: all 0.5s linear;
+}
+.main_contrl .main_contr_right{
+	float: right;
+	margin-right: 30px;
+}
+.img_wraper{
+	height: 240px;
+	width: 240px;
+	background: black;
+	border-radius: 50%;
+	margin-top: 50px;
+	overflow: hidden;
+}
+.img_wraper img{
+	width: 100%;
+	height: 100%;
+}
+.like_active{
+	color: #DC143C;
+	opacity: 1;
+}
+.img_rotate{
+	animation:rotation 8s  linear infinite ;
+}
+@keyframes rotation{
+	0%{
+		transform: rotate(0deg);
+	}
+	50%{
+		transform: rotate(180deg);
+	}
+	100%{
+		transform:rotate(360deg) ;
+	}
+}
+.heart_beat{
+	animation:beat 1s ease infinite;
+}
+@keyframes beat{
+	0%{
+		transform:scale(1);
+	}
+	50%{
+		transform:scale(1.2);
+	}
+	75%{
+		transform:scale(1.4);
+	}
+	100%{
+		transform:scale(1.0);
+		color: #DC143C;
+	}
+}
+
+
