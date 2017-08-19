@@ -2,12 +2,10 @@ window.onload = function() {
 	var myPlayer = document.getElementById("myPlayer");
 	var playBtn = document.getElementById("playOrpause");
 	var isLike = document.getElementById("like");
-	var like_wrap=document.querySelector(".like");
+	var like_wrap = document.querySelector(".like");
 	var curTime = document.querySelector(".curTime"); //获取当前已经播放的时间
 	var totalTime = document.querySelector(".totalTime"); //获取当前音频的总时长
-	var imgWraper=document.querySelector(".img_wraper");
-	var min = null;
-	var sec = null;
+	var imgWraper = document.querySelector(".img_wraper");
 	var val = null;
 	var data = null;
 	var music_src = null;
@@ -18,12 +16,13 @@ window.onload = function() {
 	var singerName = document.querySelector(".music_singer");
 	var musicImg = document.querySelector(".music_img");
 	var nextBtn = document.getElementById("next");
-	var index = 0;//记录当前播放到第几首了
-	var progress_inner=document.querySelector(".pannel_inner");
-	var deleteBtn=document.querySelector(".delete");
-	var voice_inner=document.querySelector(".voice_inner");
+	var index = 0; //记录当前播放到第几首了
+	var progress_inner = document.querySelector(".pannel_inner");
+	var deleteBtn = document.querySelector(".delete");
+	var voice_inner = document.querySelector(".voice_inner");
+	var min = null;
+	var sec = null;
 
-	
 	~ function() {
 		//通用的事件绑定方法
 		var EventUtil = {
@@ -55,12 +54,12 @@ window.onload = function() {
 
 		//时间转换
 		function changeTime(cur) {
-			if(cur == totalTime) {
+			if(cur === totalTime) {
 				min = Math.floor(myPlayer.duration / 60);
-				sec = Math.floor(myPlayer.duration - min * 60);
+				sec = Math.floor(myPlayer.duration % 60);
 			} else {
 				min = Math.floor(myPlayer.currentTime / 60);
-				sec = Math.floor(myPlayer.currentTime - min * 60);
+				sec = Math.floor(myPlayer.currentTime % 60);
 			}
 			min = min < 10 ? ("0" + min) : min;
 			sec = sec < 10 ? ("0" + sec) : sec;
@@ -69,7 +68,7 @@ window.onload = function() {
 		function controlTime() {
 			changeTime(totalTime);
 			totalTime.innerHTML = min + ":" + sec;
-			setInterval(function() {
+			window.setInterval(function() {
 				changeTime(curTime);
 				curTime.innerHTML = min + ":" + sec;
 			}, 1);
@@ -81,16 +80,15 @@ window.onload = function() {
 			if(myPlayer.paused) {
 				myPlayer.play();
 				this.className = "iconfont icon-bofangqi_zanting";
-                utils.addClass(imgWraper,"img_rotate");
-                utils.addClass(like_wrap,"heart_beat");
+				utils.addClass(imgWraper, "img_rotate");
+				utils.addClass(like_wrap, "heart_beat");
 				return;
 			}
 			myPlayer.pause();
-			utils.removeClass(imgWraper,"img_rotate");
-			utils.removeClass(like_wrap,"heart_beat");
+			utils.removeClass(imgWraper, "img_rotate");
+			utils.removeClass(like_wrap, "heart_beat");
 			this.className = "iconfont icon-bofangqi_bofang";
-			
-			
+
 		});
 		//控制喜欢按钮
 		~ function() {
@@ -119,22 +117,21 @@ window.onload = function() {
 		}();
 
 		//下一首歌
-		function nextMusic(){
-				EventUtil.addHandler(nextBtn, "click", function() {
-				index++;
-				index=index===data.length?0:index;
-                musicControl();
-			});
+		function nextMusic() {
+			index++;
+			index = index === data.length ? 0 : index;
+			musicControl();
 
 		}
-		nextMusic();
-			
-		
+		EventUtil.addHandler(nextBtn, "click", function() {
+			nextMusic();
+		});
+
 		//数据绑定
 		musicControl();
 
 		function musicControl() {
-			
+
 			for(var i = 0, len = data.length; i < len; i++) {
 				//绑定数据
 				var cur = data[i];
@@ -143,73 +140,74 @@ window.onload = function() {
 					music_src = cur["src"];
 					music_name = cur["music_name"];
 					singer_name = cur["singer_name"];
-					img_src=cur["img_src"];
+					img_src = cur["img_src"];
 				}
 
 			}
-			
+			utils.addClass(imgWraper, "img_rotate");
+			utils.addClass(like_wrap, "heart_beat");
+			playBtn.className = "iconfont icon-bofangqi_zanting";
 			controlTime();
 			myPlayer.src = music_src;
 			musicName.innerText = music_name;
 			singerName.innerText = singer_name;
-			musicImg.src=img_src;
-			playBtn.className = "iconfont icon-bofangqi_zanting";
-			if(myPlayer.ended){
+			musicImg.src = img_src;
+			if(myPlayer.ended) {
 				index++;
-				index=index===data.length?0:index;
+				index = index === data.length ? 0 : index;
 			}
-           
-			progress_inner.style.width=0;
-			
-			
+
+			progress_inner.style.width = 0;
+			//播放结束自动进行下一首
+			if(myPlayer.ended) {
+				nextMusic();
+			}
+
 		}
-		
-		//控制时间面板
-		var timer=null;
-		function controlProgress(){
-			var pro_persent=myPlayer.currentTime/myPlayer.duration;
-			progress_inner.style.width=pro_persent*progress_inner.parentNode.offsetWidth+"px";
-			EventUtil.addHandler(progress_inner.parentNode,"click",function(e){
+
+		//控制进度条面板
+		var timer = null;
+
+		function controlProgress() {
+			var pro_persent = myPlayer.currentTime / myPlayer.duration;
+			progress_inner.style.width = pro_persent * progress_inner.parentNode.offsetWidth + "px";
+			EventUtil.addHandler(progress_inner.parentNode, "click", function(e) {
 				clearInterval(timer);
-				e=e||window.event;
-			    var disX=e.clientX-this.offsetLeft;
-			    pro_persent=disX/this.offsetWidth;
-			    progress_inner.style.width= pro_persent*this.offsetWidth+"px";
-			    myPlayer.currentTime=parseInt(pro_persent*myPlayer.duration);
+				e = e || window.event;
+				var disX = e.clientX - this.offsetLeft;
+				pro_persent = disX / this.offsetWidth;
+				progress_inner.style.width = pro_persent * this.offsetWidth + "px";
+				myPlayer.currentTime = parseInt(pro_persent * myPlayer.duration);
 			});
-				
+
 		}
-	timer=window.setInterval(function(){
+		timer = window.setInterval(function() {
 			controlProgress();
-		},1000);		
-		
+		}, 1000);
+
 		//删除音乐 
-		~function() {
-			EventUtil.addHandler(deleteBtn,"click",function(){				
-				data.splice(index,1);
-                musicControl();
-                index++;
-				index=index===data.length?0:index;
-				if(data.length===0){
+		~ function() {
+			EventUtil.addHandler(deleteBtn, "click", function() {
+				data.splice(index, 1);
+				nextMusic();
+				if(data.length === 0) {
 					alert("抱歉，此时已没有可以删除的歌曲~");
 				}
 			});
-		
-		
+
 		}();
-		
+
 		//控制音量
-		~function(){
-			EventUtil.addHandler(voice_inner.parentNode,"click",function(e){
-				e=e||window.event;
+		~ function() {
+			EventUtil.addHandler(voice_inner.parentNode, "click", function(e) {
+				e = e || window.event;
 				//console.log(utils.offset(this).top);
-			    var disY=parseInt(this.offsetHeight-(e.clientY-utils.offset(this).top));
-			    voice_persent=disY/this.parentNode.offsetHeight;
-			    voice_inner.style.height=voice_persent*this.offsetHeight+"px";//问题解决：旋转180度
-			    myPlayer.volume=voice_persent;
+				var disY = parseInt(this.offsetHeight - (e.clientY - utils.offset(this).top));
+				voice_persent = disY / this.parentNode.offsetHeight;
+				voice_inner.style.height = voice_persent * this.offsetHeight + "px"; //问题解决：旋转180度
+				myPlayer.volume = voice_persent;
 			});
 		}();
-		
 
 	}();
 };
