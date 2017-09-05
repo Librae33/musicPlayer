@@ -1,29 +1,11 @@
 window.onload = function() {
-	var myPlayer = document.getElementById("myPlayer");
-	var playBtn = document.getElementById("playOrpause");
-	var isLike = document.getElementById("like");
-	var like_wrap = document.querySelector(".like");
-	var curTime = document.querySelector(".curTime"); //获取当前已经播放的时间
-	var totalTime = document.querySelector(".totalTime"); //获取当前音频的总时长
-	var imgWraper = document.querySelector(".img_wraper");
-	var val = null;
-	var data = null;
-	var music_src = null;
-	var music_name = null;
-	var singer_name = null;
-	var img_src = null;
-	var musicName = document.querySelector(".music_name");
-	var singerName = document.querySelector(".music_singer");
-	var musicImg = document.querySelector(".music_img");
-	var nextBtn = document.getElementById("next");
-	var index = 0; //记录当前播放到第几首了
-	var progress_inner = document.querySelector(".pannel_inner");
-	var deleteBtn = document.querySelector(".delete");
-	var voice_inner = document.querySelector(".voice_inner");
-	var min = null;
-	var sec = null;
-
 	~ function() {
+		function $(obj) {
+			return document.getElementById(obj);
+		}
+		var myPlayer = $("myPlayer");
+		var index = 0; //记录当前播放到第几首了
+		var data = null;
 		//通用的事件绑定方法
 		var EventUtil = {
 			addHandler: function(el, type, handler) {
@@ -53,6 +35,7 @@ window.onload = function() {
 		}
 
 		//时间转换
+		var totalTime = document.querySelector(".totalTime"); //获取当前音频的总时长
 		function changeTime(cur) {
 			if(cur === totalTime) {
 				min = Math.floor(myPlayer.duration / 60);
@@ -64,8 +47,10 @@ window.onload = function() {
 			min = min < 10 ? ("0" + min) : min;
 			sec = sec < 10 ? ("0" + sec) : sec;
 		}
+
 		//控制时间
 		function controlTime() {
+			var curTime = document.querySelector(".curTime"); //获取当前已经播放的时间		
 			changeTime(totalTime);
 			totalTime.innerHTML = min + ":" + sec;
 			window.setInterval(function() {
@@ -74,9 +59,11 @@ window.onload = function() {
 			}, 1);
 
 		};
-		controlTime();
+		/*controlTime();*/
+        var imgWraper = document.querySelector(".img_wraper");
+        var like_wrap = document.querySelector(".like");
 		//控制播放或暂停
-		EventUtil.addHandler(playBtn, "click", function() {
+		EventUtil.addHandler($("playOrpause"), "click", function() {	
 			if(myPlayer.paused) {
 				myPlayer.play();
 				this.className = "iconfont icon-bofangqi_zanting";
@@ -90,18 +77,20 @@ window.onload = function() {
 			this.className = "iconfont icon-bofangqi_bofang";
 
 		});
-		//控制喜欢按钮
-		~ function() {
-			EventUtil.addHandler(isLike, "click", function() {
-				if(utils.hasClass(this, "like_active")) {
-					utils.removeClass(this, "like_active");
-				} else {
-					utils.addClass(this, "like_active");
-				}
-			});
-		}();
+
+		//控制喜欢按钮	
+		EventUtil.addHandler($("like"), "click", function() {
+			if(utils.hasClass(this, "like_active")) {
+				utils.removeClass(this, "like_active");
+			} else {
+				utils.addClass(this, "like_active");
+			}
+		});
+
 		//ajax 获取数据
-		~ function() {
+		function bindData() {
+			var val = null;
+			
 			var xhr = new XMLHttpRequest;
 			//false表示同步请求（如果数据没有请求回来将不进行下面的操作）
 			xhr.open("get", "data/music.txt?_=" + Math.random(), false);
@@ -114,7 +103,7 @@ window.onload = function() {
 				}
 			};
 			xhr.send(null);
-		}();
+		}
 
 		//下一首歌
 		function nextMusic() {
@@ -123,15 +112,22 @@ window.onload = function() {
 			musicControl();
 
 		}
+
+		var nextBtn = document.getElementById("next");
 		EventUtil.addHandler(nextBtn, "click", function() {
 			nextMusic();
 		});
 
 		//数据绑定
-		musicControl();
 
 		function musicControl() {
-
+			var musicName = document.querySelector(".music_name");
+			var singerName = document.querySelector(".music_singer");
+			var musicImg = document.querySelector(".music_img");
+			var singer_name = null;
+			var img_src = null;
+			var music_src = null;
+			var music_name = null;
 			for(var i = 0, len = data.length; i < len; i++) {
 				//绑定数据
 				var cur = data[i];
@@ -146,7 +142,7 @@ window.onload = function() {
 			}
 			utils.addClass(imgWraper, "img_rotate");
 			utils.addClass(like_wrap, "heart_beat");
-			playBtn.className = "iconfont icon-bofangqi_zanting";
+			$("playOrpause").className = "iconfont icon-bofangqi_zanting";
 			controlTime();
 			myPlayer.src = music_src;
 			musicName.innerText = music_name;
@@ -167,7 +163,7 @@ window.onload = function() {
 
 		//控制进度条面板
 		var timer = null;
-
+		var progress_inner = document.querySelector(".pannel_inner");
 		function controlProgress() {
 			var pro_persent = myPlayer.currentTime / myPlayer.duration;
 			progress_inner.style.width = pro_persent * progress_inner.parentNode.offsetWidth + "px";
@@ -186,28 +182,30 @@ window.onload = function() {
 		}, 1000);
 
 		//删除音乐 
-		~ function() {
-			EventUtil.addHandler(deleteBtn, "click", function() {
-				data.splice(index, 1);
-				nextMusic();
-				if(data.length === 0) {
-					alert("抱歉，此时已没有可以删除的歌曲~");
-				}
-			});
-
-		}();
+		var deleteBtn = document.querySelector(".delete");
+		EventUtil.addHandler(deleteBtn, "click", function() {
+			data.splice(index, 1);
+			nextMusic();
+			if(data.length === 0) {
+				alert("抱歉，此时已没有可以删除的歌曲~");
+			}
+		});
 
 		//控制音量
-		~ function() {
-			EventUtil.addHandler(voice_inner.parentNode, "click", function(e) {
-				e = e || window.event;
-				//console.log(utils.offset(this).top);
-				var disY = parseInt(this.offsetHeight - (e.clientY - utils.offset(this).top));
-				voice_persent = disY / this.parentNode.offsetHeight;
-				voice_inner.style.height = voice_persent * this.offsetHeight + "px"; //问题解决：旋转180度
-				myPlayer.volume = voice_persent;
-			});
-		}();
+		var voice_inner = document.querySelector(".voice_inner");
+		EventUtil.addHandler(voice_inner.parentNode, "click", function(e) {
+			e = e || window.event;
+			var disY = parseInt(this.offsetHeight - (e.clientY - utils.offset(this).top));
+			voice_persent = disY / this.parentNode.offsetHeight;
+			voice_inner.style.height = voice_persent * this.offsetHeight + "px"; //问题解决：旋转180度
+			myPlayer.volume = voice_persent;
+		});
+
+		function init() {
+			bindData();
+			musicControl();
+		}
+		init();
 
 	}();
 };
